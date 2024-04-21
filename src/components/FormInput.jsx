@@ -1,3 +1,5 @@
+import React from 'react'
+
 function FormInput({label, type, name}) {
     return (
     <label className="form-control w-full mb-3">

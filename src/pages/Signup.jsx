@@ -1,7 +1,8 @@
 import { useSignUp } from "../hooks/useSignUp"
 import { FcGoogle } from "react-icons/fc";
-import { Link, Form} from "react-router-dom";
+import { Link, Form, useActionData} from "react-router-dom";
 import FormInput from "../components/FormInput";
+import { useEffect } from "react";
 
 export const action = async ({request}) => {
   let formData = await request.formData();
@@ -9,19 +10,27 @@ export const action = async ({request}) => {
   let email = formData.get("Email");
   let password = formData.get("Password");
    
-  return null;
+  return { name , email , password };
 };
 
 function Signup() {
-  const {signupWithGoogle , user , error} = useSignUp()
+  let userSignup = useActionData();
+
+  const {signupWithGoogle , signupWithEmailAndPassword , user , error} = useSignUp()
+
+  useEffect(() => {
+    if (userSignup) {
+      signupWithEmailAndPassword(userSignup.email , userSignup.password)
+    }
+  } , [userSignup])
 
     return (
       <div className="min-h-screen grid place-items-center">
         <div className="max-w-96 w-full">
         <Form method="POST">
-        <FormInput type="text" label="Name:" name= "Name"/>
-        <FormInput type="text" label="Email:" name= "Email"/>
-        <FormInput type="text" label="Password:" name= "Password"/>
+       <FormInput type="text" label="Name:" name="Name"/>
+       <FormInput type="email" label="Email:" name="Email"/>
+       <FormInput type="password" label="Password:" name="Password"/>
       <div>   
       <button className="btn btn-secondary w-full mb-3" type="submit">
         Submit
